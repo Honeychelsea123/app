@@ -14,59 +14,71 @@
 <link rel="manifest" href="manifest.webmanifest">
 
 <!-- 상태바 -->
-<meta name="theme-color" content="#1E3A8E">
+<meta name="theme-color" content="#F2F2F7">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="도쿄 여행">
 <meta name="mobile-web-app-capable" content="yes">
 
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
-    background: #1E3A8E;
+    background: #F2F2F7;          /* 앱 배경과 동일 — 위아래 띠가 보이지 않습니다 */
     overscroll-behavior: none;
   }
   #app {
     position: fixed;
-    top: env(safe-area-inset-top);
-    left: 0; right: 0; bottom: 0;
+    inset: 0;              /* 아래 끝까지 앱이 차지합니다 */
     width: 100%;
-    height: calc(100% - env(safe-area-inset-top));
+    height: 100%;
     border: 0;
-    background: #E5E5EA;
+    background: #F2F2F7;
+  }
+  /* 안전영역 높이를 재기 위한 보이지 않는 자 */
+  #probe {
+    position: fixed; left: -9999px; bottom: 0;
+    height: env(safe-area-inset-bottom);
+    width: 1px;
   }
   #fallback {
     position: fixed; inset: 0;
     display: none;
     align-items: center; justify-content: center;
     padding: 32px; text-align: center;
-    color: #F2F2F7;
+    color: #1C1C1E;
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
   }
-  #fallback a { color: #FFD6AA; }
+  #fallback a { color: #1E5FD8; }
 </style>
 </head>
 <body>
 
-<!-- ▼▼▼ 여기 두 곳에 배포 URL(.../exec)을 넣으세요 ▼▼▼ -->
-<iframe id="app" src="https://script.google.com/macros/s/AKfycbzDjv0jWepJlp0IM7rdU561Tf2rhmVI8IBkm8X-XZE-yRWI-sm5e9hu91VFqtP0hnnP/exec" title="도쿄 여행 플래너"
-        allow="geolocation; clipboard-write"></iframe>
+<div id="probe"></div>
+<iframe id="app" title="도쿄 여행 플래너" allow="geolocation; clipboard-write"></iframe>
 
 <div id="fallback">
   <div>
     <p>앱을 불러오지 못했습니다.</p>
-    <p><a href="https://script.google.com/u/0/home/projects/1gAjV8g2zb3RNznyqkNuGxcoflyu8DAy_R1_Q0xoc-hNxZsQMhm4duR00/edit">브라우저에서 직접 열기</a></p>
+    <p><a id="direct" href="#">브라우저에서 직접 열기</a></p>
   </div>
 </div>
-<!-- ▲▲▲ ▲▲▲ -->
 
 <script>
-  // 8초 안에 로드되지 않으면 직접 열기 링크를 보여줍니다.
+  // ▼ 배포 URL을 여기 한 곳에만 넣으면 됩니다 (.../exec)
+  var EXEC = 'https://script.google.com/macros/s/AKfycbzDjv0jWepJlp0IM7rdU561Tf2rhmVI8IBkm8X-XZE-yRWI-sm5e9hu91VFqtP0hnnP/exec';
+
+  // 홈 인디케이터 높이를 재서 앱에 넘깁니다.
+  // iframe 안에서는 env(safe-area-inset-*)가 0으로 나오기 때문입니다.
+  var sab = Math.round(parseFloat(getComputedStyle(document.getElementById('probe')).height) || 0);
+  var frame = document.getElementById('app');
+  frame.src = EXEC + (EXEC.indexOf('?') >= 0 ? '&' : '?') + 'sab=' + sab;
+
   var loaded = false;
-  document.getElementById('app').addEventListener('load', function () { loaded = true; });
+  frame.addEventListener('load', function () { loaded = true; });
   setTimeout(function () {
     if (!loaded) {
       document.getElementById('app').style.display = 'none';
+      document.getElementById('direct').href = EXEC;
       document.getElementById('fallback').style.display = 'flex';
     }
   }, 8000);
