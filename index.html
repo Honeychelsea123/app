@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>도쿄 여행</title>
+
+<!-- 홈 화면 아이콘 (iOS) -->
+<link rel="apple-touch-icon" href="icon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon/icon-192.png">
+
+<!-- 홈 화면 아이콘 + 전체화면 (안드로이드) -->
+<link rel="manifest" href="manifest.webmanifest">
+
+<!-- 상태바 -->
+<meta name="theme-color" content="#1E3A8E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="도쿄 여행">
+<meta name="mobile-web-app-capable" content="yes">
+
+<style>
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #1E3A8E;
+    overscroll-behavior: none;
+  }
+  #app {
+    position: fixed;
+    top: env(safe-area-inset-top);
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: calc(100% - env(safe-area-inset-top));
+    border: 0;
+    background: #E5E5EA;
+  }
+  #fallback {
+    position: fixed; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 32px; text-align: center;
+    color: #F2F2F7;
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  }
+  #fallback a { color: #FFD6AA; }
+</style>
+</head>
+<body>
+
+<!-- ▼▼▼ 여기 두 곳에 배포 URL(.../exec)을 넣으세요 ▼▼▼ -->
+<iframe id="app" src="https://script.google.com/macros/s/AKfycbzDjv0jWepJlp0IM7rdU561Tf2rhmVI8IBkm8X-XZE-yRWI-sm5e9hu91VFqtP0hnnP/exec" title="도쿄 여행 플래너"
+        allow="geolocation; clipboard-write"></iframe>
+
+<div id="fallback">
+  <div>
+    <p>앱을 불러오지 못했습니다.</p>
+    <p><a href="https://script.google.com/u/0/home/projects/1gAjV8g2zb3RNznyqkNuGxcoflyu8DAy_R1_Q0xoc-hNxZsQMhm4duR00/edit">브라우저에서 직접 열기</a></p>
+  </div>
+</div>
+<!-- ▲▲▲ ▲▲▲ -->
+
+<script>
+  // 8초 안에 로드되지 않으면 직접 열기 링크를 보여줍니다.
+  var loaded = false;
+  document.getElementById('app').addEventListener('load', function () { loaded = true; });
+  setTimeout(function () {
+    if (!loaded) {
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('fallback').style.display = 'flex';
+    }
+  }, 8000);
+</script>
+
+</body>
+</html>
